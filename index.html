@@ -1,0 +1,186 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>みどり造園 取引先ネットワーク（スマホ版）</title>
+<style>
+:root{--g:#2e7d32;--gd:#1b5e20;--gl:#e8f5e9;--blue:#1565c0;--bluel:#e3f2fd;--org:#e65100;--orgl:#fff3e0;--pur:#6a1b9a;--purl:#f3e5f5;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Yu Gothic","Hiragino Sans","Meiryo",sans-serif;-webkit-tap-highlight-color:transparent;}
+body{background:#f4f7f4;color:#1a1a1a;padding:10px 10px 80px;}
+h1{font-size:17px;color:var(--gd);margin-bottom:2px;}
+.sub{font-size:11px;color:#666;margin-bottom:10px;line-height:1.5;}
+.tag{font-size:10px;background:#fce4ec;color:#c2185b;padding:1px 6px;border-radius:8px;}
+.zone-label{font-weight:bold;font-size:12px;color:#fff;padding:4px 14px;border-radius:20px;display:inline-block;margin:12px 0 6px;}
+.zl-moto{background:var(--blue);}
+.zl-shita{background:var(--g);}
+.zl-both{background:var(--org);}
+.zl-shizai{background:var(--pur);}
+.zone{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
+.chip{border:1.5px solid;border-radius:10px;padding:8px 6px;cursor:pointer;background:#fff;font-size:12px;text-align:center;}
+.chip:active{transform:scale(.97);}
+.chip b{display:block;font-size:12.5px;line-height:1.3;}
+.chip small{color:#666;font-size:10px;display:block;line-height:1.25;margin-top:2px;}
+.c-moto{border-color:var(--blue);background:var(--bluel);}
+.c-moto b{color:var(--blue);}
+.c-shita{border-color:var(--g);background:var(--gl);}
+.c-shita b{color:var(--gd);}
+.c-both{border-color:var(--org);background:var(--orgl);}
+.c-both b{color:var(--org);}
+.c-shizai{border-color:var(--pur);background:var(--purl);}
+.c-shizai b{color:var(--pur);}
+.chip.active{outline:3px solid #ffca28;}
+.arrow{text-align:center;color:#9e9e9e;font-size:11px;margin:8px 0 0;}
+/* 中央：みどり造園 */
+.midori{background:linear-gradient(135deg,var(--gd),var(--g));color:#fff;border-radius:16px;
+padding:16px 12px;text-align:center;box-shadow:0 4px 14px rgba(27,94,32,.35);margin:14px 0;cursor:pointer;}
+.midori b{font-size:24px;display:block;letter-spacing:3px;}
+.midori span{font-size:11px;opacity:.9;}
+.midori small{display:block;font-size:10px;opacity:.8;margin-top:4px;}
+.legend{font-size:11px;color:#555;margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.legend span{display:inline-flex;align-items:center;gap:4px;}
+.dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+/* 詳細：ボトムシート */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:.2s;z-index:9;}
+.overlay.on{opacity:1;pointer-events:auto;}
+.sheet{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:16px 16px 0 0;
+box-shadow:0 -4px 20px rgba(0,0,0,.25);padding:14px 16px 24px;z-index:10;
+max-height:70vh;overflow-y:auto;transform:translateY(105%);transition:.22s;}
+.sheet.on{transform:translateY(0);}
+.sheet h2{font-size:16px;margin-bottom:2px;padding-right:36px;}
+.close{position:absolute;top:10px;right:12px;width:30px;height:30px;border-radius:50%;
+border:none;background:#eee;color:#555;font-size:16px;font-weight:bold;cursor:pointer;}
+.badge{font-size:11px;color:#fff;padding:2px 10px;border-radius:12px;display:inline-block;margin-bottom:8px;}
+.b-moto{background:var(--blue);}
+.b-shita{background:var(--g);}
+.b-both{background:var(--org);}
+.b-shizai{background:var(--pur);}
+.b-hq{background:#1b5e20;}
+.row{display:flex;padding:6px 0;border-bottom:1px dashed #e0e0e0;font-size:13px;}
+.row .k{width:78px;color:#777;flex-shrink:0;font-size:12px;}
+.row .v{flex:1;font-weight:600;line-height:1.5;}
+.big{font-size:19px;color:var(--gd);font-weight:bold;}
+</style></head><body>
+<h1>🌿 みどり造園 取引先ネットワーク</h1>
+<div class="sub">上＝元請 ／ 中央＝㈱みどり造園 ／ 資材屋(仕入先)・両方 ／ 下＝下請。会社をタップで詳細。<span class="tag">要確認=数字は仮</span></div>
+
+<span class="zone-label zl-moto">▲ 元請（仕事をくれる会社・人）</span>
+<div class="zone" id="z-moto"></div>
+<div class="arrow">▼ 仕事を受ける ▼</div>
+
+<div class="midori" id="midori"><b>㈱みどり造園</b><span>豊田市</span><small>タップで会社詳細（人数・車両など）</small></div>
+
+<span class="zone-label zl-shizai">◀ 資材屋（仕入先）</span>
+<div class="zone" id="z-shizai"></div>
+
+<span class="zone-label zl-both">▶ 両方（元請 下請）</span>
+<div class="zone" id="z-both"></div>
+
+<div class="arrow">▼ 応援を頼む ▼</div>
+<span class="zone-label zl-shita">▼ 下請（手伝ってくれる協力会社）</span>
+<div class="zone" id="z-shita"></div>
+
+<div class="legend">
+<span><i class="dot" style="background:var(--blue)"></i>元請</span>
+<span><i class="dot" style="background:var(--g)"></i>下請</span>
+<span><i class="dot" style="background:var(--org)"></i>両方</span>
+<span><i class="dot" style="background:var(--pur)"></i>資材屋</span>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<div class="sheet" id="sheet">
+<button class="close" id="closeBtn">×</button>
+<div id="sheetBody"></div>
+</div>
+
+<script>
+const D=[
+// 元請
+{id:1,cat:"moto",name:"豊田市（市役所）",sub:"街路樹・草刈",jisseki:"計 7,700万円",memo:"豊田街路7 6,600万＋草刈(家下川500万・道願池600万)。みどりの屋台骨・公共",contact:""},
+{id:13,cat:"moto",name:"文化振興財団",sub:"上郷交流館",jisseki:"上郷交流館 約1,000万円",memo:"上郷交流館の管理(約1,000万)。市役所寄り(公共)",contact:""},
+{id:2,cat:"moto",name:"愛知県",sub:"県道",jisseki:"県道 1,700万円",memo:"県道の維持・草刈",contact:""},
+{id:41,cat:"moto",name:"大島造園土木",sub:"県トップ級大手",jisseki:"トヨタの仕事を発注：トヨタ三好工場・鞍ヶ池K邸跡・つどいの丘。豊田ホーム(園部さん新規)もここの仕事",memo:"愛知県で2本の指に入る大手。トヨタ自動車の仕事をみどりへ発注(常用ではなく長年、後から発注)。豊田ホームの現場もこの中の仕事(園部さんが新規で追加受注)。安全衛生ハンドブック/KY様式の発行元",contact:"名古屋市緑区"},
+{id:17,cat:"moto",name:"個人のお客さま",sub:"約300件",jisseki:"合算すると主力級",memo:"個人邸の直接客が約300件。1件は小さくても合算で主力級。剪定・草刈・消毒など",contact:""},
+{id:14,cat:"moto",name:"TGメンテナンス",sub:"福島さん",jisseki:"TGみよし工場・TG瀬戸工場ほか",memo:"福島さんの会社。TGみよし工場・TG瀬戸工場・福岡邸・竹中邸などの管理をみどりへ発注。※TGKとは別会社",contact:""},
+{id:4,cat:"moto",name:"サンセルフ・TGK豊田下水道",sub:"富田社長／管路・草刈",jisseki:"TGK草刈 1,838,000／浄化施設管理＋高木剪定(新規見積・常用)",memo:"サンセルフ(富田社長の合同会社)とTGK豊田下水道をセットで扱う。TGKは大型草刈年間(竹尾・杉浦さんが応援)で、サンセルフに管路を発注＝サンセルフの下請けの関係。サンセルフは浄化施設の管理も受注→高木剪定の新規見積・常用作業に発展。鞍ヶ池・幸穂台の高木剪定は特殊伐採16本を別建てで見積調整中(3-4月適期)。みどりからは交通誘導員を出すことも(実質は両方)",contact:""},
+{id:8,cat:"moto",name:"日比谷アメニス",sub:"モリコロ年間管理",jisseki:"モリコロ 花壇植替・芝刈 年間管理",memo:"モリコロパークの花壇植替え・芝刈の年間管理。農業センター・佐布里公園・七曲り公園も管理し時々常用でお手伝い。一次協力業者(点数式KY)",contact:""},
+{id:3,cat:"moto",name:"マキタ（日進営業所）",sub:"竹伐採・防草シート",jisseki:"竹伐採・防草シート(金額要確認)",memo:"マキタ日進営業所からの受注。※三好工場とは別",contact:""},
+{id:16,cat:"moto",name:"天龍造園土木",sub:"元請",jisseki:"—",memo:"元請け会社",contact:""},
+{id:18,cat:"moto",name:"三共造園",sub:"岩附拓巳くん実家",jisseki:"元請",memo:"元請け会社。岩附拓巳くんの実家。親戚の塩飽さんがそこの社員で、忙しくてどうしようもない時に手伝いをお願いする",contact:""},
+{id:60,cat:"moto",name:"丹羽造園",sub:"草刈",jisseki:"元請",memo:"元請け会社。草刈で最近仲が良くなっている",contact:""},
+{id:12,cat:"moto",name:"眞栄",sub:"水無瀬川ほか",jisseki:"水無瀬川 約700万円(約10年)",memo:"水無瀬川を約10年、年約700万。公共寄り",contact:""},
+// 資材屋
+{id:50,cat:"shizai",name:"永緑園",sub:"樹木の仕入",memo:"樹木を注文する仕入先",contact:""},
+{id:51,cat:"shizai",name:"川上建材",sub:"建材",memo:"建材をお願いする仕入先",contact:""},
+{id:52,cat:"shizai",name:"志賀為さん",sub:"資材",memo:"資材を注文する仕入先",contact:""},
+{id:53,cat:"shizai",name:"竹藤商店",sub:"資材",memo:"資材の仕入先",contact:""},
+{id:54,cat:"shizai",name:"㈲タケヨシ",sub:"防草シート等",memo:"資材の仕入先。豊田市花本町。ザバーン防草シート等",contact:""},
+{id:55,cat:"shizai",name:"タケヒロ産業",sub:"資材",memo:"資材の仕入先",contact:""},
+{id:56,cat:"shizai",name:"龍玉精工㈱",sub:"パイプ等",memo:"パイプなど資材の仕入先。みどりの近く",contact:""},
+{id:58,cat:"shizai",name:"井上定",sub:"エクステリア",memo:"エクステリア全般の仕入先",contact:""},
+{id:59,cat:"shizai",name:"インテルグロー",sub:"みどり近く",memo:"みどり造園の近く。詳細要確認",contact:""},
+// 両方
+{id:40,cat:"both",name:"ITガーデン",sub:"井上貴朗(inotti)",price:"松剪定の達人",jisseki:"愛三工業・中央發條(剪定1,629,550)の管理を常用でいただく／みどり→IT約60人日・IT→みどり7日",memo:"下請でもあり元請でもある。ITガーデンから愛三工業・中央發條の管理を常用受注(中央發條はIT経由でみどりが作業／IT自身は元請ではない)。受けた7日は安城のハンマーナイフ草刈(指導は未)。11月 個人邸応援を検討中→松剪定の指導狙い",contact:""},
+{id:42,cat:"both",name:"豊橋園芸ガーデン",sub:"宮脇/甲山さん",price:"元請(厚生病院)＋協力",jisseki:"豊田厚生病院＋栄のビル植栽など",memo:"Garden Group(Since1945・大型緑化)。厚生病院の仕事を取りまとめ→みどりへ常用単価で発注(2年目も常用)。栄のビルの植栽も一緒に。NENBARA紹介の甲山さん。※以前アイコー経由と整理していたが、みどりの元請は豊橋園芸ガーデン",contact:"本社:豊橋/知多/名古屋/東京"},
+{id:26,cat:"both",name:"松平造園",sub:"13tラフター／元請にも",price:"約12万/日(請け)",jisseki:"下請＝ラフター仕事を請けで依頼／元請＝仕事をくれることも",memo:"元請けにも下請けにもなる。下請=13tラフター(オペ＋作業員付き)のラフター仕事を請け仕事(請負)で依頼、約12万/日。特殊伐採(ロープ吊り/ラフター)対応。元請としてみどりに仕事を出すこともある。豊田市",contact:""},
+{id:35,cat:"both",name:"山水園",sub:"岡嶋秀晃(元みどり)",price:"高額(要確認)",jisseki:"下請で応援＋元請にもなる",memo:"岡嶋秀晃くんは10年以上前にみどり造園で働いていた人で、今は山水園。下請けとして手伝ってもらうこともあれば、元請にもなる両方の関係。単価は高額だった",contact:""},
+{id:31,cat:"both",name:"修林",sub:"成瀬圭太郎(安城)",price:"相互応援",jisseki:"手伝ったり手伝ってもらったり",memo:"安城の会社で相互の関係。安城の造園組合で旅行などお世話に。安城とのパイプ役(マウンさんも安城で飲みにも)。三景クリエイション・山本造園など安城の仕事も。値段は安くても定期で当時大変助かった。今後も適度な距離感で",contact:"安城"},
+// 下請
+{id:20,cat:"shita",name:"日日園",sub:"西立野寛希",price:"21,500",memo:"みどりから独立。頭として一括受領→采配(手放す経営)。常用と請けの両方。個人邸などでもお願いする。月末週固定で応援",contact:""},
+{id:28,cat:"shita",name:"愛生園",sub:"渡辺彰三",price:"21,500",memo:"みどり造園から独立。時間を経て良い関係。お手伝いしてもらっている",contact:""},
+{id:27,cat:"shita",name:"涼風園",sub:"加藤涼大",price:"21,500",memo:"みどり造園から独立。時間を経て良い関係。お手伝いしてもらっている",contact:""},
+{id:21,cat:"shita",name:"いろは苑",sub:"北川真云(マウン)",price:"21,500",memo:"安城市・一人親方(ミャンマー)。忙しい時はほぼ来てくれる(土日は自分の仕事)。基本常用、時々請けでも。体力あり。自宅も安城で飲みにも。0566-72-4160/090-4157-5577",contact:"安城市三河安城本町1-27-7"},
+{id:34,cat:"shita",name:"塩飽さん",sub:"三共造園の社員／常用",price:"高額(要確認)",memo:"三共造園の社員(岩附拓巳くんの親戚)。下請け・常用で来てもらう。高額だが忙しくてどうしようもない時に手伝ってもらえる",contact:""},
+{id:32,cat:"shita",name:"竹尾さん・杉浦さん",sub:"83歳のお二人",price:"11,000",memo:"竹尾清さん・杉浦彰彦さんのお二人。高齢(83歳)だが助けてもらっている。TGK現場が中心だが専門ではない。無理させず少しでも手伝ってもらう。車両代込",contact:""},
+{id:29,cat:"shita",name:"翠石苑",sub:"小寺宏樹・亮",price:"要確認",memo:"独立時に県道を2年助けてもらった(当時みどりは人手不足)。互いに成長・助け合い。宏樹くん(兄社長)＋亮くん(弟)、弟の能力が高く人付き合いも上手",contact:""},
+{id:24,cat:"shita",name:"うえ木やいど",sub:"井戸宏文(多治見)",price:"22,500",memo:"多治見から。一人親方でかなり年季の入った造園屋。修行レベルはITガーデンの次くらい。遠方のため特別単価",contact:""},
+{id:22,cat:"shita",name:"MKJ",sub:"加藤元康(土木)",price:"19,000",memo:"㈱エムケージャパン。商工会議所仲間の会社で土木屋。草刈の資格がない等どこでも入れる訳ではないが、人柄がとても良い",contact:""},
+{id:23,cat:"shita",name:"NENBARA",sub:"捻原さん",price:"23,000",memo:"豊橋園芸ガーデンの甲山さんの依頼タイミングで声かけ→縁。修林さん経由の付き合い。造園もする土木系。県道の街路も請けでよくやる。少し高めだが体力あり忙しい時に助かる。安城市和泉町中北104-19",contact:"安城市和泉町中北104-19"},
+{id:57,cat:"shita",name:"サンガーデン",sub:"山口修さん／請け",price:"請け仕事",memo:"人工芝の会社(山口修さん)。もともと人工芝の仕入先だったが、人工芝の施工を請け仕事(請負)でやってもらっている協力会社",contact:""},
+{id:25,cat:"shita",name:"レポゼ",sub:"林和紀",price:"21,500",memo:"新規協力会社",contact:""},
+{id:30,cat:"shita",name:"こぼり景観",sub:"小堀丈彰",price:"要確認",memo:"先日10年以上ぶりに再会。個人邸の土木仕事がかなり上手。豊田造形の板倉さんと同時に三共造園から独立。最近は豊田造形と草刈を取り合い(二つ取)、関係は未確認",contact:""},
+];
+const z={moto:document.getElementById("z-moto"),shita:document.getElementById("z-shita"),both:document.getElementById("z-both"),shizai:document.getElementById("z-shizai")};
+const catClass={moto:"c-moto",shita:"c-shita",both:"c-both",shizai:"c-shizai"};
+const catName={moto:"元請（仕事をくれる）",shita:"下請（手伝ってくれる）",both:"両方（元請 下請）",shizai:"資材屋（仕入先）"};
+const catBadge={moto:"b-moto",shita:"b-shita",both:"b-both",shizai:"b-shizai"};
+const sheet=document.getElementById("sheet"),overlay=document.getElementById("overlay"),body=document.getElementById("sheetBody");
+function openSheet(html){ body.innerHTML=html; sheet.classList.add("on"); overlay.classList.add("on"); }
+function closeSheet(){ sheet.classList.remove("on"); overlay.classList.remove("on");
+document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("active");}); }
+document.getElementById("closeBtn").onclick=closeSheet;
+overlay.onclick=closeSheet;
+function chip(d){
+const e=document.createElement("div");
+e.className="chip "+catClass[d.cat];
+e.innerHTML="<b>"+d.name+"</b><small>"+(d.sub||"")+"</small>";
+e.onclick=function(){
+document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("active");});
+e.classList.add("active");
+let rows="<div class='row'><div class='k'>区分</div><div class='v'>"+catName[d.cat]+"</div></div>";
+if(d.sub) rows+="<div class='row'><div class='k'>担当/備考</div><div class='v'>"+d.sub+"</div></div>";
+if(d.price) rows+="<div class='row'><div class='k'>単価</div><div class='v big'>"+d.price+"</div></div>";
+if(d.jisseki) rows+="<div class='row'><div class='k'>実績/内容</div><div class='v'>"+d.jisseki+"</div></div>";
+if(d.contact) rows+="<div class='row'><div class='k'>連絡先</div><div class='v' style='font-weight:400'>"+d.contact+"</div></div>";
+if(d.memo) rows+="<div class='row' style='border:none'><div class='k'>メモ</div><div class='v' style='font-weight:400'>"+d.memo+"</div></div>";
+openSheet("<h2>"+d.name+"</h2><span class='badge "+catBadge[d.cat]+"'>"+catName[d.cat]+"</span>"+rows);
+};
+return e;
+}
+D.forEach(function(d){ z[d.cat].appendChild(chip(d)); });
+// 中央：㈱みどり造園の詳細（ホームページ midori-z.com ／ 企業ポータル参照）
+const MIDORI=[
+["所在地","愛知県豊田市緑ヶ丘7-12（〒471-0838）"],
+["代表者","水野 義政"],
+["設立","昭和63年2月（創業 昭和48年）"],
+["資本金","1,000万円"],
+["従業員","40名（職人20・営業10・事務10）※HP他に42名(パート含む)表記も"],
+["車両・重機","油圧ショベル 2台／大型ダンプ 2台"],
+["有資格者","1級造園施工管理技士3・2級造園施工管理技士1・2級土木施工管理技士2・1級造園技能士5・2級造園技能士3・街路樹剪定士5・植栽基盤診断士1"],
+["営業種目","造園・土木・とび土工・石・解体"],
+["HP","midori-z.com"]
+];
+document.getElementById("midori").onclick=function(){
+let r="";
+MIDORI.forEach(function(x){ r+="<div class='row'><div class='k'>"+x[0]+"</div><div class='v' style='font-weight:500'>"+x[1]+"</div></div>"; });
+r+="<div class='row' style='border:none'><div class='k'>備考</div><div class='v' style='font-weight:400'>数字はホームページ・企業情報ポータルの公開値。資格・人数は要確認</div></div>";
+openSheet("<h2>㈱みどり造園</h2><span class='badge b-hq'>本社（中央）</span>"+r);
+};
+</script></body></html>
